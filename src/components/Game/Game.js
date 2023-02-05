@@ -12,7 +12,7 @@ const answer = sample(WORDS);
 console.info({ answer });
 
 function Game() {
-  const initGuesses = range(1, NUM_OF_GUESSES_ALLOWED).map((i) => {
+  const initGuesses = range(1, NUM_OF_GUESSES_ALLOWED + 1).map((i) => {
     return {
       value: "",
       key: i,
@@ -21,9 +21,31 @@ function Game() {
 
   const [guesses, setGuesses] = React.useState(initGuesses);
   const [numGuesses, setNumGuesses] = React.useState(0);
+  const [done, setDone] = React.useState(false);
+
+  function HappyBanner() {
+    return (
+      <div className="happy banner">
+        <p>
+          <strong>Congratulations!</strong> Got it in{" "}
+          <strong>{numGuesses} guesses</strong>.
+        </p>
+      </div>
+    );
+  }
+
+  function SadBanner() {
+    return (
+      <div className="sad banner">
+        <p>
+          Sorry, the correct answer is <strong>{answer}</strong>.
+        </p>
+      </div>
+    );
+  }
 
   const addGuess = (guess) => {
-    if (numGuesses === 5) {
+    if (numGuesses === NUM_OF_GUESSES_ALLOWED) {
       return;
     }
 
@@ -33,15 +55,34 @@ function Game() {
     };
 
     const nextGuesses = [...guesses];
+    const nextNumGuesses = numGuesses + 1;
     nextGuesses[numGuesses] = guessObj;
     setGuesses(nextGuesses);
-    setNumGuesses(numGuesses + 1);
+    setNumGuesses(nextNumGuesses);
+
+    const nextDone =
+      nextNumGuesses === NUM_OF_GUESSES_ALLOWED ||
+      nextGuesses[numGuesses].value === answer;
+
+    console.log(
+      nextNumGuesses,
+      NUM_OF_GUESSES_ALLOWED,
+      nextGuesses[numGuesses],
+      answer,
+      nextDone
+    );
+
+    setDone(nextDone);
   };
 
   return (
     <>
       <GuessResults guesses={guesses} answer={answer} />
-      <GuessInput addGuess={addGuess} />
+      <GuessInput addGuess={addGuess} inProgress={!done} />
+      {done &&
+        (guesses[numGuesses - 1].value === answer
+          ? HappyBanner()
+          : SadBanner())}
     </>
   );
 }

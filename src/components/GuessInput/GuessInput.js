@@ -1,6 +1,6 @@
 import React from "react";
 
-function GuessInput({ addGuess }) {
+function GuessInput({ addGuess, inProgress }) {
   const [guess, setGuess] = React.useState("");
 
   const updateGuess = (raw) => {
@@ -34,6 +34,7 @@ function GuessInput({ addGuess }) {
         type="text"
         value={guess}
         onChange={(evt) => updateGuess(evt.target.value)}
+        disabled={!inProgress}
       />
     </form>
   );
