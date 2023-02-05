@@ -1,15 +1,27 @@
 import React from "react";
 
-function Guess({ value }) {
-  const chars = value?.length == 5 ? value.split("") : Array(5).fill("");
+import { checkGuess } from "../../game-helpers";
+
+function Guess({ value, answer }) {
+  let results = checkGuess(value, answer);
+  if (!results) {
+    results = Array(5).fill({
+      letter: "",
+      status: null,
+    });
+  }
 
   return (
     <p className="guess">
-      {chars.map((x, i) => (
-        <span className="cell" key={i}>
-          {x}
-        </span>
-      ))}
+      {results.map((x, i) => {
+        const className = `cell ${x.status}`;
+
+        return (
+          <span className={className} key={i}>
+            {x.letter}
+          </span>
+        );
+      })}
     </p>
   );
 }
