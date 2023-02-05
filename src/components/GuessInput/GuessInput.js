@@ -1,6 +1,6 @@
 import React from "react";
 
-function GuessInput() {
+function GuessInput({ addGuess }) {
   const [guess, setGuess] = React.useState("");
 
   const updateGuess = (raw) => {
@@ -22,7 +22,7 @@ function GuessInput() {
       return;
     }
 
-    console.log(guess);
+    addGuess(guess);
     setGuess("");
   };
 
@@ -33,7 +33,6 @@ function GuessInput() {
         id="guess-input"
         type="text"
         value={guess}
-        pattern="[A-Za-z]"
         onChange={(evt) => updateGuess(evt.target.value)}
       />
     </form>
